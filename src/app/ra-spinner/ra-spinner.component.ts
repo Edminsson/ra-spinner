@@ -60,14 +60,13 @@ export class RaSpinnerComponent implements OnDestroy, OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.setDefaultOptions();
+    this.spinner = this.getDefaultOptions();
     this.spinnerService.getSpinner(this.name)
       .pipe(
         takeUntil(this.ngUnsubscribe)
       )
       .subscribe((spinner: RaSpinner) => {
-        this.setDefaultOptions();
-        Object.assign(this.spinner, spinner);
+        this.spinner = {...this.getDefaultOptions(), ...spinner};
         if (spinner.show) {
           this.onInputChange();
         }
@@ -75,8 +74,9 @@ export class RaSpinnerComponent implements OnDestroy, OnInit, OnChanges {
       });
   }
 
-  setDefaultOptions = () => {
-    this.spinner = new RaSpinner({
+  getDefaultOptions = () => {
+    const newSpinner = new RaSpinner();
+    const defaultSpinner = {
       name: this.name,
       bdColor: this.bdColor,
       size: this.size,
@@ -87,7 +87,8 @@ export class RaSpinnerComponent implements OnDestroy, OnInit, OnChanges {
       divCount: this.divCount,
       show: this.show,
       zIndex: this.zIndex,
-    });
+    };
+    return { ...newSpinner, ...defaultSpinner };
   }
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }): void {
@@ -106,8 +107,6 @@ export class RaSpinnerComponent implements OnDestroy, OnInit, OnChanges {
   }
 
   getClass(type: string, size: Size): string {
-    this.spinner.divCount = DEFAULTS.DIV_COUNTS;
-    this.spinner.divArray = Array(this.spinner.divCount).fill(0).map((x, i) => i);
     let sizeClass = '';
     switch (size.toLowerCase()) {
       case 'small':
@@ -126,6 +125,8 @@ export class RaSpinnerComponent implements OnDestroy, OnInit, OnChanges {
   }
 
   onInputChange(): void {
+    this.spinner.divCount = DEFAULTS.DIV_COUNTS;
+    this.spinner.divArray = Array(this.spinner.divCount).fill(0).map((x, i) => i);
     this.spinner.class = this.getClass(this.spinner.type, this.spinner.size);
   }
 

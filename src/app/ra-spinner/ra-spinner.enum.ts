@@ -33,7 +33,8 @@ export class RaSpinner {
   show: boolean;
   zIndex: number;
 
-  constructor(init?: Partial<RaSpinner>) {
-    Object.assign(this, init);
+  constructor(name: string = null, show: boolean = false) {
+    this.name = name;
+    this.show = show;
   }
 }
