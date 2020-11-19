@@ -15,29 +15,21 @@ export class RaSpinnerService {
     return this.spinnerObservable.asObservable().pipe(filter((x: RaSpinner) => x && x.name === name));
   }
 
-  show(name: string = PRIMARY_SPINNER, spinner?: Spinner) {
-    setTimeout(() => {
-      const showPromise = new Promise((resolve, _reject) => {
-        if (spinner && Object.keys(spinner).length) {
-          spinner['name'] = name;
-          this.spinnerObservable.next(new RaSpinner({ ...spinner, show: true }));
-          resolve(true);
-        } else {
-          this.spinnerObservable.next(new RaSpinner({ name, show: true }));
-          resolve(true);
-        }
-      });
-      return showPromise;
-    }, 10);
+  show(name: string = PRIMARY_SPINNER, spinner?: Spinner): Promise<boolean> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.spinnerObservable.next(new RaSpinner({ name, show: true }));
+        resolve(true);
+      }, 10);
+    });
   }
 
-  hide(name: string = PRIMARY_SPINNER, debounce: number = 10) {
-    setTimeout(() => {
-      const hidePromise = new Promise((resolve, _reject) => {
+  hide(name: string = PRIMARY_SPINNER, debounce: number = 10): Promise<boolean> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
         this.spinnerObservable.next(new RaSpinner({ name, show: false }));
         resolve(true);
-      });
-      return hidePromise;
-    }, debounce);
+      }, debounce);
+    });
   }
 }

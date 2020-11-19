@@ -11,7 +11,7 @@ import {
 import { RaSpinnerService } from './ra-spinner.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { LOADERS, DEFAULTS, Size, RaSpinner, PRIMARY_SPINNER } from './ra-spinner.enum';
+import { DEFAULTS, Size, RaSpinner, PRIMARY_SPINNER } from './ra-spinner.enum';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
@@ -39,7 +39,6 @@ export class RaSpinnerComponent implements OnDestroy, OnInit, OnChanges {
   @Input() fullScreen: boolean;
   @Input() name: string;
   @Input() zIndex: number;
-  @Input() template: string;
   spinner: RaSpinner = new RaSpinner();
   divArray: Array<number>;
   divCount: number;
@@ -54,7 +53,6 @@ export class RaSpinnerComponent implements OnDestroy, OnInit, OnChanges {
     this.size = 'large';
     this.fullScreen = true;
     this.name = PRIMARY_SPINNER;
-    this.template = null;
 
     this.divArray = [];
     this.divCount = 0;
@@ -89,7 +87,6 @@ export class RaSpinnerComponent implements OnDestroy, OnInit, OnChanges {
       divCount: this.divCount,
       show: this.show,
       zIndex: this.zIndex,
-      template: this.template,
     });
   }
 
@@ -109,7 +106,7 @@ export class RaSpinnerComponent implements OnDestroy, OnInit, OnChanges {
   }
 
   getClass(type: string, size: Size): string {
-    this.spinner.divCount = LOADERS[type];
+    this.spinner.divCount = DEFAULTS.DIV_COUNTS;
     this.spinner.divArray = Array(this.spinner.divCount).fill(0).map((x, i) => i);
     let sizeClass = '';
     switch (size.toLowerCase()) {
